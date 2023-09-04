@@ -1,6 +1,75 @@
-* {
+@import url('https://fonts.googleapis.com/css2?family=Borel&family=Handjet:wght@300;500;700;800&family=Open+Sans:ital,wght@1,500&family=Poppins:ital,wght@1,200&family=Roboto:wght@500&display=swap');
 
-    /* You can remove this line whenever you want, it is here for testing purposes */
-    border: 1px solid black;
-    
+body {
+    margin: 0px;
+    color: rgb(29, 1, 37);
+    font-family: 'Open Sans', sans-serif;
 }
+
+.grid-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 2fr 4fr 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: 
+    "header header header header"
+    ". lsidebar main  ."
+    ". lsidebar rsidebar ."
+    "footer footer footer footer";
+
+}
+.header, .footer {
+    background-color: rgb(202, 194, 194);
+}
+
+.main-content, .right-sidebar {
+    background-color: rgb(217, 238, 247);;
+}
+
+.header {
+    font-weight: bolder;
+    text-align: center;
+    padding: auto;
+    grid-area: header;
+}
+
+.main-content {
+    grid-area: main;
+
+}
+
+.left-sidebar {
+    background-color: rgb(202, 211, 219);
+    grid-area: lsidebar;
+
+}
+
+.right-sidebar {
+    grid-area: rsidebar;
+
+}
+
+.footer{
+    text-align: center;
+    grid-area: footer;
+    padding-bottom: 15px;
+}
+
+.footer > a {
+    color:blue;
+}
+
+@media screen and (max-width: 650px) {
+
+    .grid-container {
+        margin: auto;
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+        "header"
+        "main"
+        "rsidebar"
+        "lsidebar"
+        "footer";
+    }
+  
+  }
