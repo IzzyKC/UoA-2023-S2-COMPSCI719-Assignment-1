@@ -37,8 +37,12 @@ body {
     grid-area: main;
 }
 
-.main-content h3, .main-content p {
+.main-content h3, .main-content p, .right-sidebar h3 {
     margin: 30px 10px;
+}
+
+.main-content span {
+    margin: 0;
 }
 
 .left-sidebar {
