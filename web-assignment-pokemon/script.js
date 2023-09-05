@@ -8,6 +8,9 @@ window.addEventListener("load", function(){
     var totalPokemonCount;
     //variable for current pokemon detail
     var currentpokemonDetail;
+    //varibale for current pokemon type info
+    //var currentPokemonTypeInfo;
+    //TODO delete var
 
     //dispaly all pokemon on left sidebar
     displayAllPokemon();
@@ -47,13 +50,35 @@ window.addEventListener("load", function(){
         //console random pokemon detail
         console.log(randomPokemonDetail);
         currentpokemonDetail = randomPokemonDetail;
-        displayPokemondetail();
+        updatePokemondetail();
+
     }
 
-    function displayPokemondetail() {
+    async function displaySinglePokemonDetail(event) {
+        //get dexNumber of selected pokemon
+        const pokedex = event.target.id.slice(3);
+        //console log dexNumber
+        console.log(pokedex);
+        //fetch selected pokemon detail from endpoint:https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/:dexNumber
+        let singlePokemonresponseObj = await fetch(`https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/${pokedex}`);
+        //check response status
+        if (singlePokemonresponseObj.status === 404) {
+            alert("Not Found - the ID we were searching for doesn'texist");
+            return;
+        }
+        //Use the fetch API response.json() method to get a JSON object from the response
+        let singlePokemonDetail = await singlePokemonresponseObj.json();
+        //console log single pokemon detail
+        console.log(singlePokemonDetail);
+        currentpokemonDetail = singlePokemonDetail;
+        updatePokemondetail();
+        
+    }
+  
+    function updatePokemondetail() {
         //display name
         document.querySelector("#name").innerText = currentpokemonDetail.name;
-        
+
         //display image
         const imgContainer = document.querySelector("#img-container");
         //clear imgContainer
@@ -70,22 +95,44 @@ window.addEventListener("load", function(){
         //display description
         document.querySelector("#description").innerText = currentpokemonDetail.dexEntry;
 
+        //displayTypeInfo
+        displayPokemonTypeInfo();
     }
 
-    async function displaySinglePokemonDetail(event) {
-        //get dexNumber of selected pokemon
-        const pokedex = event.target.id.slice(3);
-        //console log dexNumber
-        console.log(pokedex);
-        //fetch selected pokemon detail from endpoint:https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/:dexNumber
-        let singlePokemonresponseObj = await fetch(`https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/${pokedex}`);
-        //Use the fetch API response.json() method to get a JSON object from the response
-        let singlePokemonDetail = await singlePokemonresponseObj.json();
-        //console log single pokemon detail
-        console.log(singlePokemonDetail);
-        currentpokemonDetail = singlePokemonDetail;
-        displayPokemondetail();
+    function displayPokemonTypeInfo() {
+        //update offense info
+        updateOffenseInfo();
+    }
 
+    async function updateOffenseInfo(){
+        //fetch offense info by pokemon type
+        //if no pokemon type, return
+        if(currentpokemonDetail.types == undefined || currentpokemonDetail.types.length === 0){
+            return;
+        }
+        //fetch offense info for each type
+        //update pokemon name
+        document.querySelector("#selectedokemon").innerText = currentpokemonDetail.name;
+        //update ppokemon types
+        document.querySelector("#typelist").innerText = currentpokemonDetail.types.toString();
+        currentpokemonDetail.types.forEach(type => updateOffenseInfoByType(type));
+
+    }
+
+    async function updateOffenseInfoByType(type){
+        //get offense type info container
+        const offenseInfo = document.querySelector("#offense");
+        //fetch type info 
+        let offenseInfoResponseObj = await fetch(`https://cs719-a01-pt-server.trex-sandwich.com/api/types/${type}`);
+        //Use the fetch API response.json() method to get a JSON object from the response
+        let offenseInfoJson = await offenseInfoResponseObj.json();
+        //console log offense info
+        console.log(offenseInfoJson);
+        //create table for type info
+        const offenseInfoTable = document.createElement("table");
+        const tHead = document.createElement("thead");
+        const tRow1 = document.createElement("tr");
+        //const thCell1
     }
 
 
