@@ -95,3 +95,36 @@ body {
 #all-pokemon tr:nth-child(even) {
     background-color: rgb(177, 201, 211)
 }
+
+.typeinfo table {
+    width: auto;
+    border: 1px solid black;
+    margin: auto 5px;
+    border-collapse: collapse;
+    white-space: nowrap;
+    background-color: oldlace;
+   
+}
+
+.typeinfo table th {
+    padding: 0 40px;
+    background-color: oldlace;
+    text-align: center;
+}
+
+.typeinfo table td{
+    padding: 0 5px;
+    text-align: left;
+}
+
+.typeinfo tr:nth-child(odd) {
+    background-color: gainsboro;
+}
+
+#offense {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+

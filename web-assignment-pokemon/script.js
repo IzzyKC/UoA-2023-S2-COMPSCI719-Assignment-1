@@ -122,6 +122,8 @@ window.addEventListener("load", function(){
     async function updateOffenseInfoByType(type){
         //get offense type info container
         const offenseInfo = document.querySelector("#offense");
+        //clear previous info
+        offenseInfo.innerHTML = "";
         //fetch type info 
         let offenseInfoResponseObj = await fetch(`https://cs719-a01-pt-server.trex-sandwich.com/api/types/${type}`);
         //Use the fetch API response.json() method to get a JSON object from the response
@@ -130,9 +132,59 @@ window.addEventListener("load", function(){
         console.log(offenseInfoJson);
         //create table for type info
         const offenseInfoTable = document.createElement("table");
+        //table head
         const tHead = document.createElement("thead");
-        const tRow1 = document.createElement("tr");
-        //const thCell1
+        //tHead.setAttribute("text-align", "center");
+        const thRow1 = document.createElement("tr");
+        const thCell11 = document.createElement("th");
+        thCell11.innerHTML = `${type} type attacks:`;
+        thCell11.setAttribute("colspan", 2);
+        thRow1.appendChild(thCell11);
+        tHead.appendChild(thRow1);
+        const thRow2 = document.createElement("tr");
+        const thCell21 = document.createElement("th");
+        thCell21.innerText = "Defending type";
+        const thCell22 = document.createElement("th");
+        thCell22.innerText = "Damage dealt";
+        thRow2.appendChild(thCell21);
+        thRow2.appendChild(thCell22);
+        tHead.appendChild(thRow2);
+        offenseInfoTable.appendChild(tHead);
+        //table body
+        const tBody = document.createElement("tbody");
+        offenseInfoJson.offenseDamageMultipliers.forEach(function(info){
+            const tbRow = document.createElement("tr");
+            const tbCol1 = document.createElement("td"); 
+            const tbCol2 = document.createElement("td"); 
+            tbCol1.innerText = info.type;
+            tbCol2.innerText = multiplierMapToString(info.multiplier);
+            tbRow.appendChild(tbCol1);
+            tbRow.appendChild(tbCol2);
+            tBody.appendChild(tbRow);
+        });
+        offenseInfoTable.appendChild(tBody);
+        //append table to offense info div
+        offenseInfo.appendChild(offenseInfoTable);
+    }
+
+    function multiplierMapToString(multiplier) {
+        switch(multiplier) {
+            case 0 :
+                return "No damage";
+            case 0.25 :
+                return "Quarter damage";
+            case 0.5 :
+                return "Half damage";
+            case 1 :
+                return "Normal damage";
+            case 2 :
+                return "Double damage";
+            case 4 :
+                return "Quadruple damage";
+            default:
+                return "can't map multiplier to a string"   
+        }
+
     }
 
 
