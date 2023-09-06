@@ -97,7 +97,7 @@ body {
 }
 
 .typeinfo table {
-    width: auto;
+    width: 100%;
     border: 1px solid black;
     margin: auto 5px;
     border-collapse: collapse;
@@ -118,10 +118,10 @@ body {
 }
 
 .typeinfo tr:nth-child(odd) {
-    background-color: gainsboro;
+    background-color: rgb(207, 205, 205);
 }
 
-#offense {
+#offense, #defense {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;

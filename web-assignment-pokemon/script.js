@@ -8,9 +8,12 @@ window.addEventListener("load", function(){
     var totalPokemonCount;
     //variable for current pokemon detail
     var currentpokemonDetail;
-    //varibale for current pokemon type info
-    //var currentPokemonTypeInfo;
-    //TODO delete var
+    //conatant of type info table column count
+    const tableInfoColumnCount = 2;
+    //const of offense table header names
+    const headerNames_OffenseInfo = ["Defending type","Damage dealt"];
+    //const of offense table header names
+    const headerNames_DefenseInfo = ["Attacking type","Damage received"];
 
     //dispaly all pokemon on left sidebar
     displayAllPokemon();
@@ -100,23 +103,39 @@ window.addEventListener("load", function(){
     }
 
     function displayPokemonTypeInfo() {
-        //update offense info
-        updateOffenseInfo();
-    }
-
-    async function updateOffenseInfo(){
-        //fetch offense info by pokemon type
-        //if no pokemon type, return
-        if(currentpokemonDetail.types == undefined || currentpokemonDetail.types.length === 0){
-            return;
-        }
-        //fetch offense info for each type
         //update pokemon name
         document.querySelector("#selectedokemon").innerText = currentpokemonDetail.name;
         //update ppokemon types
         document.querySelector("#typelist").innerText = currentpokemonDetail.types.toString();
+        //update offense info
+        updateOffenseInfo();
+        //update defense Info
+        updateDefenseInfo();
+    }
+
+    async function updateOffenseInfo() {
+        //if no pokemon type, return
+        if(currentpokemonDetail.types == undefined || currentpokemonDetail.types.length === 0){
+            return;
+        }
+        //update offense info by pokemon type
         currentpokemonDetail.types.forEach(type => updateOffenseInfoByType(type));
 
+    }
+
+    async function updateDefenseInfo() {
+        //get defense info container
+        const defenseInfo = document.querySelector("#defense");
+        //clear previous info
+        defenseInfo.innerHTML = "";
+        //fetch defense info by dexNumber
+        const dexNumber = currentpokemonDetail.dexNumber;
+        let defenseInfoResponseObj = await fetch(`https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/${dexNumber}/defense-profile`);
+        //Use the fetch API response.json() method to get a JSON object from the response
+        let defenseInfoJson = await defenseInfoResponseObj.json();
+         //console log defense info
+         console.log(defenseInfoJson);
+         displayTypeInfoInTable(defenseInfo, [headerNames_DefenseInfo], defenseInfoJson);
     }
 
     async function updateOffenseInfoByType(type){
@@ -124,47 +143,15 @@ window.addEventListener("load", function(){
         const offenseInfo = document.querySelector("#offense");
         //clear previous info
         offenseInfo.innerHTML = "";
-        //fetch type info 
+        //fetch offense info by type
         let offenseInfoResponseObj = await fetch(`https://cs719-a01-pt-server.trex-sandwich.com/api/types/${type}`);
         //Use the fetch API response.json() method to get a JSON object from the response
         let offenseInfoJson = await offenseInfoResponseObj.json();
         //console log offense info
         console.log(offenseInfoJson);
-        //create table for type info
-        const offenseInfoTable = document.createElement("table");
-        //table head
-        const tHead = document.createElement("thead");
-        //tHead.setAttribute("text-align", "center");
-        const thRow1 = document.createElement("tr");
-        const thCell11 = document.createElement("th");
-        thCell11.innerHTML = `${type} type attacks:`;
-        thCell11.setAttribute("colspan", 2);
-        thRow1.appendChild(thCell11);
-        tHead.appendChild(thRow1);
-        const thRow2 = document.createElement("tr");
-        const thCell21 = document.createElement("th");
-        thCell21.innerText = "Defending type";
-        const thCell22 = document.createElement("th");
-        thCell22.innerText = "Damage dealt";
-        thRow2.appendChild(thCell21);
-        thRow2.appendChild(thCell22);
-        tHead.appendChild(thRow2);
-        offenseInfoTable.appendChild(tHead);
-        //table body
-        const tBody = document.createElement("tbody");
-        offenseInfoJson.offenseDamageMultipliers.forEach(function(info){
-            const tbRow = document.createElement("tr");
-            const tbCol1 = document.createElement("td"); 
-            const tbCol2 = document.createElement("td"); 
-            tbCol1.innerText = info.type;
-            tbCol2.innerText = multiplierMapToString(info.multiplier);
-            tbRow.appendChild(tbCol1);
-            tbRow.appendChild(tbCol2);
-            tBody.appendChild(tbRow);
-        });
-        offenseInfoTable.appendChild(tBody);
-        //append table to offense info div
-        offenseInfo.appendChild(offenseInfoTable);
+        const headerNamesArray = [[`${type} type attacks:`], headerNames_OffenseInfo];
+        displayTypeInfoInTable(offenseInfo, headerNamesArray, offenseInfoJson.offenseDamageMultipliers);
+
     }
 
     function multiplierMapToString(multiplier) {
@@ -187,7 +174,53 @@ window.addEventListener("load", function(){
 
     }
 
+    function displayTypeInfoInTable(container, headerNamesArray, typeInfoMultipliers){
+         //create table for type info
+         const infoTable = document.createElement("table");
+         //create table head element
+         const tHead = document.createElement("thead");
+         //create header
+         headerNamesArray.forEach(function(headerNames) {
+            createTypeInfoHeaderRow(tHead, headerNames);
+         });
+         // append thead to table
+         infoTable.appendChild(tHead);
+         //create table body element
+         const tBody = document.createElement("tbody");
+         createTypeInfoTableContent(tBody, typeInfoMultipliers);
+        //append tbody to table
+        infoTable.appendChild(tBody);
+         //append table to offense info div
+         container.appendChild(infoTable);
 
+    }
 
+    function createTypeInfoHeaderRow(tHead, headerNames) {
+        const thRow = document.createElement("tr");
+        for(let i = 0; i < headerNames.length; i++){
+            const thCell = document.createElement("th");
+            thCell.innerText = headerNames[i];
+            if(headerNames.length < tableInfoColumnCount) {
+                thCell.setAttribute("colspan", tableInfoColumnCount);
+            }
+            thRow.appendChild(thCell);
+        }
+        tHead.appendChild(thRow);
+
+    }
+
+    function createTypeInfoTableContent(tBody, infoMultipliers){
+        infoMultipliers.forEach(function(info){
+            const tbRow = document.createElement("tr");
+            const tbCol1 = document.createElement("td"); 
+            const tbCol2 = document.createElement("td"); 
+            tbCol1.innerText = info.type;
+            tbCol2.innerText = multiplierMapToString(info.multiplier);
+            tbRow.appendChild(tbCol1);
+            tbRow.appendChild(tbCol2);
+            tBody.appendChild(tbRow);
+        });
+
+    }
 
 });
