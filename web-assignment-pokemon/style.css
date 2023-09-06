@@ -52,7 +52,7 @@ body {
 }
 
 .left-sidebar *, .right-sidebar *, .main-content * {
-    margin: 10px;
+    margin: 20px 10px;
 }
 
 .right-sidebar {
@@ -126,5 +126,10 @@ body {
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
+}
+
+#typelist {
+    font-weight: bold;
+    margin-left: 5px;
 }
 

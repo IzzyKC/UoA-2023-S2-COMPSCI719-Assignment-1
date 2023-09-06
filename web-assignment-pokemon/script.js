@@ -157,6 +157,7 @@ window.addEventListener("load", function(){
     }
 
     function multiplierMapToString(multiplier) {
+        //switch concept from COMPSCI-718
         switch(multiplier) {
             case 0 :
                 return "No damage";
