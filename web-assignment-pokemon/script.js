@@ -123,21 +123,6 @@ window.addEventListener("load", function(){
 
     }
 
-    async function updateDefenseInfo() {
-        //get defense info container
-        const defenseInfo = document.querySelector("#defense");
-        //clear previous info
-        defenseInfo.innerHTML = "";
-        //fetch defense info by dexNumber
-        const dexNumber = currentpokemonDetail.dexNumber;
-        let defenseInfoResponseObj = await fetch(`https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/${dexNumber}/defense-profile`);
-        //Use the fetch API response.json() method to get a JSON object from the response
-        let defenseInfoJson = await defenseInfoResponseObj.json();
-         //console log defense info
-         console.log(defenseInfoJson);
-         displayTypeInfoInTable(defenseInfo, [headerNames_DefenseInfo], defenseInfoJson);
-    }
-
     async function updateOffenseInfoByType(type){
         //get offense type info container
         const offenseInfo = document.querySelector("#offense");
@@ -150,8 +135,25 @@ window.addEventListener("load", function(){
         //console log offense info
         console.log(offenseInfoJson);
         const headerNamesArray = [[`${type} type attacks:`], headerNames_OffenseInfo];
+        //display offense info in a table
         displayTypeInfoInTable(offenseInfo, headerNamesArray, offenseInfoJson.offenseDamageMultipliers);
 
+    }
+    
+    async function updateDefenseInfo() {
+        //get defense info container
+        const defenseInfo = document.querySelector("#defense");
+        //clear previous info
+        defenseInfo.innerHTML = "";
+        //fetch defense info by dexNumber
+        const dexNumber = currentpokemonDetail.dexNumber;
+        let defenseInfoResponseObj = await fetch(`https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/${dexNumber}/defense-profile`);
+        //Use the fetch API response.json() method to get a JSON object from the response
+        let defenseInfoJson = await defenseInfoResponseObj.json();
+         //console log defense info
+         console.log(defenseInfoJson);
+         //display defense info in a table
+         displayTypeInfoInTable(defenseInfo, [headerNames_DefenseInfo], defenseInfoJson);
     }
 
     function multiplierMapToString(multiplier) {
