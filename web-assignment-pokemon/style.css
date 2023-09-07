@@ -30,9 +30,17 @@ body {
 
 .header {
     font-weight: bolder;
-    text-align: center;
+    text-align: left;
     padding: auto;
     grid-area: header;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.header h1 {
+    margin: 30px 20px;
 }
 
 .main-content {
@@ -166,3 +174,14 @@ h1, h2, h3, h4 {
     border-radius: 10px;
 }
 
+#egg {
+    width: 80px;
+    height: 80px;
+    margin: 10px 20px 0 10px;
+}
+#bullsaur {
+    width: 60px;
+    height: 60px;
+    margin: 30px 10px 0 30px;
+
+}
