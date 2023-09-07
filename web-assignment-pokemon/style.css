@@ -2,7 +2,7 @@
 
 body {
     margin: 0px;
-    color: rgb(29, 1, 37);
+    color: rgb(23, 1, 29);
     font-family: 'Open Sans', sans-serif;
 }
 
@@ -13,17 +13,18 @@ body {
     grid-template-rows: auto auto 1fr auto;
     grid-template-areas: 
     "header header header header"
-    ". lsidebar main  ."
+    ". lsidebar main ."
     ". lsidebar rsidebar ."
     "footer footer footer footer";
 
 }
 .header, .footer {
-    background-color: rgb(202, 194, 194);
+    color: rgb(11, 2, 27);
+    background-color: rgb(199, 135, 194);
 }
 
 .main-content, .right-sidebar {
-    background-color: rgb(217, 238, 247);
+    background-color: rgb(238, 228, 232);
 }
 
 .header {
@@ -37,6 +38,10 @@ body {
     grid-area: main;
 }
 
+h1, h2, h3, h4 {
+    text-shadow: 5px 5px 5px rgb(109, 104, 104);
+}
+
 .main-content h3, .main-content p, .right-sidebar h3, .right-sidebar h4 {
     margin: 30px 10px;
 }
@@ -46,10 +51,11 @@ body {
 }
 
 .left-sidebar {
-    background-color: rgb(202, 211, 219);
+    background-color: rgb(241, 187, 209);
     grid-area: lsidebar;
 
 }
+
 
 .left-sidebar *, .right-sidebar *, .main-content * {
     margin: 20px 10px;
@@ -90,10 +96,16 @@ body {
     text-align: center;
     width: 90%;
     padding: 5px;
+    border-radius: 10px;
+    box-shadow: 10px 10px 10px rgb(168, 139, 144);
 }
 
 #all-pokemon tr:nth-child(even) {
-    background-color: rgb(177, 201, 211)
+    background-color: rgb(238, 143, 238);
+}
+
+#all-pokemon td {
+    border-radius: 10px;
 }
 
 .typeinfo table {
@@ -103,7 +115,6 @@ body {
     border-collapse: collapse;
     white-space: nowrap;
     background-color: oldlace;
-   
 }
 
 .typeinfo table th {
@@ -118,7 +129,7 @@ body {
 }
 
 .typeinfo tr:nth-child(odd) {
-    background-color: rgb(207, 205, 205);
+    background-color: rgb(228, 179, 212);
 }
 
 #offense, #defense {
@@ -126,6 +137,7 @@ body {
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
+    box-shadow: 8px 8px 8px rgb(145, 121, 121);
 }
 
 #typelist {
@@ -142,6 +154,14 @@ body {
 }
 
 #pokeimg:hover {
-    transform: scale(1.5);
+    transform: rotate(360deg) scale(1.5);
+    filter: contrast(150%) drop-shadow(16px 16px 10px rgb(19, 18, 18));
+}
+
+.pokeSelected {
+    font-weight: bolder;
+    border: 5px solid rgb(59, 7, 59);
+    box-shadow:  6px 6px 6px rgba(170, 165, 165, 0.1);
+    border-radius: 10px;
 }
 

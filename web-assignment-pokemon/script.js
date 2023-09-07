@@ -21,6 +21,17 @@ window.addEventListener("load", function(){
     //initilaise page
     initialisePage();
 
+    
+    function addSelectedPokemonClass(selectedPokemon) {
+        //remove previous selected class
+        const pokemons = document.querySelectorAll("#all-pokemon td"); 
+        pokemons.forEach(function(pokemon) {
+            pokemon.classList.remove("pokeSelected");  
+        });
+        //add selected pokemon classlist
+        selectedPokemon.classList.add("pokeSelected");
+    }
+
     async function displayAllPokemon() {
         //get all-pokemon container
         const allPokemons = document.querySelector("#all-pokemon");
@@ -54,10 +65,14 @@ window.addEventListener("load", function(){
         console.log(randomPokemonDetail);
         currentpokemonDetail = randomPokemonDetail;
         updatePokemondetail();
-
+        //add selected pokemon css class
+        addSelectedPokemonClass(document.querySelector("#id-"+currentpokemonDetail.dexNumber));
+      
     }
 
     async function displaySinglePokemonDetail(event) {
+        //add selected pokemon css class
+        addSelectedPokemonClass(event.target);
         //get dexNumber of selected pokemon
         const pokedex = event.target.id.slice(3);
         //console log dexNumber
@@ -101,6 +116,7 @@ window.addEventListener("load", function(){
 
         //displayTypeInfo
         displayPokemonTypeInfo();
+
     }
 
     function displayPokemonTypeInfo() {
