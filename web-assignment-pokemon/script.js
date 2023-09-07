@@ -87,6 +87,7 @@ window.addEventListener("load", function(){
         //clear imgContainer
         imgContainer.innerHTML = "";
         const img = document.createElement("img");
+        img.id = "pokeimg";
         img.src = currentpokemonDetail.imageUrl;
         img.alt = currentpokemonDetail.name;
         img.title = currentpokemonDetail.name;

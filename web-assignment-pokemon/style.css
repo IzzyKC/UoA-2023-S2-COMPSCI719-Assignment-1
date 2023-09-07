@@ -133,3 +133,15 @@ body {
     margin-left: 5px;
 }
 
+#img-container {
+    text-align: center;
+}
+
+#pokeimg {
+    transition: transform 2s ease-in;
+}
+
+#pokeimg:hover {
+    transform: scale(1.5);
+}
+
