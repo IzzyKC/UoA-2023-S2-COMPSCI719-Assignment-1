@@ -187,8 +187,8 @@ h1, h2, h3, h4 {
     height: 80px;
     order: 0;
     margin-left: 10px;
-    transition: transform 150ms ease-in-out;
-    animation: rotation 1s 1 linear;
+    transition: transform 500ms ease-in-out;
+    animation: rotation 500mss 1 linear;
 }
 
 #movepokemon {
@@ -203,6 +203,7 @@ h1, h2, h3, h4 {
     transform: scaleX(-1);
 }
 
+
 @keyframes rotation {
     from {
         opacity: 0; transform: scale(0); 
@@ -214,35 +215,21 @@ h1, h2, h3, h4 {
 
 @keyframes moving {
     from{
-        top: 20px;
         transform: rotate(0deg);
     }
-    10% {
-        top: 15px;
+    20% {
         transform: rotate(60deg);
         filter: contrast(150%) drop-shadow(15px 15px 5px rgb(252, 67, 21));
     }
-    20% {
-        top: 20px;
+    40% {
         transform: rotate(120deg);
         filter: contrast(150%) drop-shadow(10px 10px 5px rgb(252, 67, 21));
     }
-    40% {
-        top: 25px;
+    80% {
         transform: rotate(180deg);
         filter: contrast(150%) drop-shadow(5px 5px 5px rgb(252, 67, 21));
     }
-    60% {
-        top: 15px;
-        transform: rotate(240deg);
-    }
-    80%{
-        top: 20px;
-        transform: rotate(300deg);
-
-    }
     to {
-        top: 25px;
         transform: rotate(360deg);
     }
     
