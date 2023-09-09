@@ -23,6 +23,9 @@ window.addEventListener("load", function(){
 
     
     function addSelectedPokemonClass(selectedPokemon) {
+        if(selectedPokemon == null) {
+            return;
+        }
         //remove previous selected class
         const pokemons = document.querySelectorAll("#all-pokemon td"); 
         pokemons.forEach(function(pokemon) {
