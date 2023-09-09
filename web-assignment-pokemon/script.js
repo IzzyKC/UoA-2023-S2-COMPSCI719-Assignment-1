@@ -65,6 +65,7 @@ window.addEventListener("load", function(){
         console.log(randomPokemonDetail);
         currentpokemonDetail = randomPokemonDetail;
         //add selected pokemon css class
+        console.log(document.querySelector("#id-"+currentpokemonDetail.dexNumber));
         addSelectedPokemonClass(document.querySelector("#id-"+currentpokemonDetail.dexNumber));
         updatePokemondetail();
         
