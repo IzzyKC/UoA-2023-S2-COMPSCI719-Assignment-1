@@ -64,10 +64,10 @@ window.addEventListener("load", function(){
         //console random pokemon detail
         console.log(randomPokemonDetail);
         currentpokemonDetail = randomPokemonDetail;
-        updatePokemondetail();
         //add selected pokemon css class
         addSelectedPokemonClass(document.querySelector("#id-"+currentpokemonDetail.dexNumber));
-      
+        updatePokemondetail();
+        
     }
 
     async function displaySinglePokemonDetail(event) {
@@ -122,7 +122,7 @@ window.addEventListener("load", function(){
     function displayPokemonTypeInfo() {
         //update pokemon name
         document.querySelector("#selectedokemon").innerText = currentpokemonDetail.name;
-        //update ppokemon types
+        //update pokemon types
         document.querySelector("#typelist").innerText = currentpokemonDetail.types.toString();
         //update offense info
         updateOffenseInfo();
