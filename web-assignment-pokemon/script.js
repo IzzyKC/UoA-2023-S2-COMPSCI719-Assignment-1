@@ -14,6 +14,8 @@ window.addEventListener("load", function(){
     const headerNames_OffenseInfo = ["Defending type","Damage dealt"];
     //const of offense table header names
     const headerNames_DefenseInfo = ["Attacking type","Damage received"];
+    //constant of localstorage prefix
+    const prefixLocalStorage = "favoritePokemonID-"
 
     //dispaly all pokemon on left sidebar
     displayAllPokemon();
@@ -50,15 +52,18 @@ window.addEventListener("load", function(){
     }
 
     function addToFavorite (){
+        //localstorage reference:
+        //1.https://www.w3schools.com/jsref/prop_win_localstorage.asp
+        //2.https://blog.logrocket.com/localstorage-javascript-complete-guide/
         //check if selected pokemon exists
         if(!isSelectedPokemonInFavorites(currentpokemonDetail)){
             //not exist, add to localstorage favorite list
-            localStorage.setItem("favoritePoke-"+currentpokemonDetail.dexNumber, currentpokemonDetail.imageUrl);
+            localStorage.setItem(prefixLocalStorage + currentpokemonDetail.dexNumber, currentpokemonDetail.imageUrl);
         }
     }
 
     function isSelectedPokemonInFavorites(selectedPokemon) {
-        let favPokemons = localStorage.getItem("favoritePoke-"+selectedPokemon.dexNumber);
+        let favPokemons = localStorage.getItem(prefixLocalStorage + selectedPokemon.dexNumber);
         console.log(Object.entries(localStorage));
         console.log(favPokemons);
         if(favPokemons == null){
@@ -69,6 +74,10 @@ window.addEventListener("load", function(){
     }
 
     function removeFromFavorite (){
+        //selected pokemon is in favorite list, remove it
+        if(isSelectedPokemonInFavorites(currentpokemonDetail)){
+            localStorage.removeItem(prefixLocalStorage + currentpokemonDetail.dexNumber);
+        }
     }
     
     function addSelectedPokemonClass(selectedPokemon) {

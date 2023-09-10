@@ -286,7 +286,6 @@ h1, h2, h3, h4 {
     border: 3px 3px 3px rgb(171, 190, 62);
     background-color: rgb(235, 233, 124);
     position: relative;
-    z-index: 1;
 }
 
 
@@ -297,5 +296,4 @@ h1, h2, h3, h4 {
     left: 0;
     width: 20px;
     height: 20px;
-    z-index: 0;
 }
