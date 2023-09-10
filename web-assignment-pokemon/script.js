@@ -21,6 +21,55 @@ window.addEventListener("load", function(){
     //initilaise page
     initialisePage();
 
+    //get like button
+    const btn_like = document.querySelector("#btn-like");
+    const btn_text = document.querySelector("#btn-text");
+    const img_like = document.querySelector("#img-like");
+    btn_like.addEventListener("click", function(event) {
+        const btnValue = event.target.value;
+        setUpFavoriteButttonStyle(btnValue);
+        if(btnValue === "like"){
+            addToFavorite();
+        }else{
+            removeFromFavorite();
+        }
+    });
+
+    function setUpFavoriteButttonStyle(btnValue) {
+        //if current value is like, then enable dislike 
+        //otherwise, enable like
+        if(btnValue === "like"){
+            btn_like.value = "dislike";
+            btn_text.innerText = "Dislike";
+            img_like.src = "./assets/dislike.png";
+        }else{
+            btn_like.value = "like";
+            btn_text.innerText = "Like";
+            img_like.src = "./assets/like.png";
+        }
+    }
+
+    function addToFavorite (){
+        //check if selected pokemon exists
+        if(!isSelectedPokemonInFavorites(currentpokemonDetail)){
+            //not exist, add to localstorage favorite list
+            localStorage.setItem("favoritePoke-"+currentpokemonDetail.dexNumber, currentpokemonDetail.imageUrl);
+        }
+    }
+
+    function isSelectedPokemonInFavorites(selectedPokemon) {
+        let favPokemons = localStorage.getItem("favoritePoke-"+selectedPokemon.dexNumber);
+        console.log(Object.entries(localStorage));
+        console.log(favPokemons);
+        if(favPokemons == null){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    function removeFromFavorite (){
+    }
     
     function addSelectedPokemonClass(selectedPokemon) {
         if(selectedPokemon == null) {
@@ -120,6 +169,9 @@ window.addEventListener("load", function(){
 
         //displayTypeInfo
         displayPokemonTypeInfo();
+
+        //set up button stype
+        setUpFavoriteButttonStyle(isSelectedPokemonInFavorites(currentpokemonDetail) ? "like" : "dislike");
 
     }
 
