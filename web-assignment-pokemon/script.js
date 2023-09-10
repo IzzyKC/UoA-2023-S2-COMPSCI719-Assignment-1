@@ -20,8 +20,13 @@ window.addEventListener("load", function(){
     //dispaly all pokemon on left sidebar
     displayAllPokemon();
 
+    //display all favotire pokemon images on Favorites section
+     displayFavoritePokemon();
+
     //initilaise page
     initialisePage();
+
+   
 
     //get like button
     const btn_like = document.querySelector("#btn-like");
@@ -55,10 +60,14 @@ window.addEventListener("load", function(){
         //localstorage reference:
         //1.https://www.w3schools.com/jsref/prop_win_localstorage.asp
         //2.https://blog.logrocket.com/localstorage-javascript-complete-guide/
+
         //check if selected pokemon exists
         if(!isSelectedPokemonInFavorites(currentpokemonDetail)){
             //not exist, add to localstorage favorite list
-            localStorage.setItem(prefixLocalStorage + currentpokemonDetail.dexNumber, currentpokemonDetail.imageUrl);
+            const key = prefixLocalStorage + currentpokemonDetail.dexNumber;
+            const imageUrl = currentpokemonDetail.imageUrl;
+            localStorage.setItem(key, imageUrl);
+            createImageOnFavorites(key, imageUrl);
         }
     }
 
@@ -117,6 +126,19 @@ window.addEventListener("load", function(){
 
     }
 
+    function displayFavoritePokemon(){
+        const favoriteNav = document.querySelector("#favorite-nav");
+        Object.keys(localStorage).forEach(key => {
+            console.log(`${key} - ${localStorage.getItem(key)}`);
+            //const div = document.querySelector("div");
+            const image = createImageElement(key, localStorage.getItem(key), key);
+            image.classList.add("favorite-img");
+            //div.style.border = "5px 5px 5px solid green";
+            //div.appendChild(image);
+            favoriteNav.appendChild(image);
+        });
+    }
+
     async function initialisePage() {
         //first load/refresh:a random Pokemon should be loaded as the selected Pokemon
         let randomPokemonResponseObj = await fetch("https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/random");
@@ -154,6 +176,16 @@ window.addEventListener("load", function(){
         updatePokemondetail();
         
     }
+
+    function createImageElement(id, src, name){
+        const img = document.createElement("img");
+        img.id = id;
+        img.src = src;
+        img.alt = name;
+        img.title = name;
+        return img;
+
+    }
   
     function updatePokemondetail() {
         //display name
@@ -163,11 +195,7 @@ window.addEventListener("load", function(){
         const imgContainer = document.querySelector("#img-container");
         //clear imgContainer
         imgContainer.innerHTML = "";
-        const img = document.createElement("img");
-        img.id = "pokeimg";
-        img.src = currentpokemonDetail.imageUrl;
-        img.alt = currentpokemonDetail.name;
-        img.title = currentpokemonDetail.name;
+        const img = createImageElement("pokeimg", currentpokemonDetail.imageUrl, currentpokemonDetail.name);
         imgContainer.appendChild(img);
 
         //display dexNumber
