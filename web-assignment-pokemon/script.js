@@ -17,6 +17,9 @@ window.addEventListener("load", function(){
     //constant of localstorage prefix
     const prefixLocalStorage = "favoritePokemonID-"
 
+    //Test
+    //this.localStorage.clear();
+
     //dispaly all pokemon on left sidebar
     displayAllPokemon();
 
@@ -30,7 +33,7 @@ window.addEventListener("load", function(){
 
     //get like button
     const btn_like = document.querySelector("#btn-like");
-    const btn_text = document.querySelector("#btn-text");
+    //const btn_text = document.querySelector("#btn-text");
     const img_like = document.querySelector("#img-like");
     btn_like.addEventListener("click", function(event) {
         const btnValue = event.target.value;
@@ -47,12 +50,10 @@ window.addEventListener("load", function(){
         //otherwise, enable like
         if(btnValue === "like"){
             btn_like.value = "dislike";
-            btn_text.innerText = "Dislike";
-            img_like.src = "./assets/dislike.png";
+            btn_like.innerText = "Remove from Favorite"
         }else{
             btn_like.value = "like";
-            btn_text.innerText = "Like";
-            img_like.src = "./assets/like.png";
+            btn_like.innerText = "Add to Favotrtie"
         }
     }
 
@@ -65,16 +66,20 @@ window.addEventListener("load", function(){
         if(!isSelectedPokemonInFavorites(currentpokemonDetail)){
             //not exist, add to localstorage favorite list
             const key = prefixLocalStorage + currentpokemonDetail.dexNumber;
-            const imageUrl = currentpokemonDetail.imageUrl;
-            localStorage.setItem(key, imageUrl);
-            createImageOnFavorites(key, imageUrl);
+            //console.log(JSON.stringify(currentpokemonDetail));
+            localStorage.setItem(key, JSON.stringify(currentpokemonDetail));
+            const image = createImageElement(key, currentpokemonDetail.imageUrl, key);
+            addImagetoFavorites(image);
         }
+    }
+
+    function addImagetoFavorites(image) {
+        image.classList.add("favorite-img");
+        document.querySelector("#favorite-nav").appendChild(image);
     }
 
     function isSelectedPokemonInFavorites(selectedPokemon) {
         let favPokemons = localStorage.getItem(prefixLocalStorage + selectedPokemon.dexNumber);
-        console.log(Object.entries(localStorage));
-        console.log(favPokemons);
         if(favPokemons == null){
             return false;
         }else{
@@ -87,6 +92,8 @@ window.addEventListener("load", function(){
         if(isSelectedPokemonInFavorites(currentpokemonDetail)){
             localStorage.removeItem(prefixLocalStorage + currentpokemonDetail.dexNumber);
         }
+        //remove, then refresh favorite section
+        displayFavoritePokemon();
     }
     
     function addSelectedPokemonClass(selectedPokemon) {
@@ -128,14 +135,14 @@ window.addEventListener("load", function(){
 
     function displayFavoritePokemon(){
         const favoriteNav = document.querySelector("#favorite-nav");
+        favoriteNav.innerHTML = "" ;
         Object.keys(localStorage).forEach(key => {
             console.log(`${key} - ${localStorage.getItem(key)}`);
             //const div = document.querySelector("div");
-            const image = createImageElement(key, localStorage.getItem(key), key);
-            image.classList.add("favorite-img");
-            //div.style.border = "5px 5px 5px solid green";
-            //div.appendChild(image);
-            favoriteNav.appendChild(image);
+            const jsonObj = JSON.parse(localStorage.getItem(key));
+            console.log(jsonObj);
+            const image = createImageElement(key, jsonObj.imageUrl, key);
+            addImagetoFavorites(image);
         });
     }
 
