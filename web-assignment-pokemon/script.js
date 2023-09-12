@@ -45,13 +45,6 @@ window.addEventListener("load", function(){
     function disableRemoveAllButton() {
         const flag = isHavingFavorite();
         btn_RemoveAll.disabled = !flag;
-        /*
-        if(flag) {
-            btn_RemoveAll.disabled = false;
-        }else{
-            btn_RemoveAll.disabled = true;
-        }
-        */
     }
     
     function disableClickedFavoriteButton() {
@@ -63,13 +56,6 @@ window.addEventListener("load", function(){
     function isClickedFavorite() {
         const clickedFavorite = document.querySelector(".favorite-clicked");
         return (clickedFavorite == null ) ? false : true;
-        /*
-        if(clickedFavorite == null ){
-            return false;
-        }else {
-            return true;
-        }
-        */
     }
     
     btn_RemoveAll.addEventListener("click", function() {
@@ -170,6 +156,7 @@ window.addEventListener("load", function(){
     }
 
     function addImagetoFavorites(image) {
+        //add image css class
         image.classList.add("favorite-img");
         document.querySelector("#favorite-nav").appendChild(image);
     }
@@ -185,14 +172,10 @@ window.addEventListener("load", function(){
     }
 
     function removeFromFavorite (){
+        //btn-like triggered function
         const localStorgeyKey = prefixLocalStorage + currentpokemonDetail.dexNumber;
+        //remove single item from localStorage by key
         removeSingleFavorite(localStorgeyKey);
-        /*
-        //selected pokemon is in favorite list, remove it
-        if(isSelectedPokemonInFavorites(currentpokemonDetail)){
-            localStorage.removeItem(prefixLocalStorage + currentpokemonDetail.dexNumber);
-        }
-        */
         
     }
 
@@ -268,6 +251,7 @@ window.addEventListener("load", function(){
             addImagetoFavorites(image);
         });
         
+        //buttons on favorite section: enable/disable control
         disableRemoveAllButton();
         disableClickedFavoriteButton();
     }
@@ -283,6 +267,7 @@ window.addEventListener("load", function(){
         //add selected pokemon css class
         console.log(document.querySelector("#id-"+currentpokemonDetail.dexNumber));
         addSelectedPokemonClass(document.querySelector("#id-"+currentpokemonDetail.dexNumber));
+        //update details on main content and type info
         updatePokemondetail();
         
     }
