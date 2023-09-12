@@ -14,27 +14,97 @@ window.addEventListener("load", function(){
     const headerNames_OffenseInfo = ["Defending type","Damage dealt"];
     //const of offense table header names
     const headerNames_DefenseInfo = ["Attacking type","Damage received"];
+    //constant of POKEMON Id prefix 
+    const prefixId = "id-";
     //constant of localstorage prefix
     const prefixLocalStorage = "favoritePokemonID-"
-
-    //Test
+    /** 
+     * retrive html element
+     */
+    //add/Remove favorite button
+    const btn_like = document.querySelector("#btn-like");
+    //remove all favorite btn
+    const btn_RemoveAll = document.querySelector("#remove-all");
+    //show selected favorite details button
+    const btn_ShowDetails = document.querySelector("#show-detail");
+    //remove selected favorite button
+    const btn_Remove = document.querySelector("#remove");
+    
+    //Test localStorage
     //this.localStorage.clear();
-
-    //dispaly all pokemon on left sidebar
-    displayAllPokemon();
-
-    //display all favotire pokemon images on Favorites section
-     displayFavoritePokemon();
 
     //initilaise page
     initialisePage();
 
-   
+     //dispaly all pokemon on left sidebar
+     displayAllPokemon();
 
-    //get like button
-    const btn_like = document.querySelector("#btn-like");
-    //const btn_text = document.querySelector("#btn-text");
-    const img_like = document.querySelector("#img-like");
+     //display all favotire pokemon images on Favorites section
+     displayFavoritePokemon();
+    
+    function disableRemoveAllButton() {
+        const flag = isHavingFavorite();
+        if(flag) {
+            btn_RemoveAll.disabled = false;
+        }else{
+            btn_RemoveAll.disabled = true;
+        }
+    }
+    
+    function disableClickedFavoriteButton() {
+        let flag = isClickedFavorite();
+        btn_ShowDetails.disabled = !flag;
+        btn_Remove.disabled = !flag;
+        /*
+        const clickedFavorite = document.querySelector(".favorite-clicked");
+        if(clickedFavorite == null ){
+            btn_ShowDetails.disabled = true;
+        }else {
+            btn_ShowDetails.disabled = false;
+        }*/
+    }
+
+    function isClickedFavorite() {
+        const clickedFavorite = document.querySelector(".favorite-clicked");
+        if(clickedFavorite == null ){
+            return false;
+        }else {
+            return true;
+        }
+    }
+    
+    btn_RemoveAll.addEventListener("click", function() {
+        Object.keys(localStorage).forEach(function(key) {
+            if(key.startsWith(prefixLocalStorage)){
+                localStorage.removeItem(key);
+            }
+        });
+        displayFavoritePokemon();
+        setUpFavoriteButttonStyle("dislike");
+    });
+
+    btn_ShowDetails.addEventListener("click", function(event) {
+        const selectedId = document.querySelector(".favorite-clicked").id;
+        console.log(selectedId);
+        //get dexNumber of selected pokemon
+        const dexNumber = selectedId.slice(prefixLocalStorage.length);
+        //add selected pokemon css class
+        const selectedFavorite = document.querySelector(`#${prefixId}${dexNumber}`);
+        addSelectedPokemonClass(selectedFavorite);
+        //console log dexNumber
+        console.log(dexNumber);
+        displaySinglePokemonDetail(dexNumber);
+    });
+
+    btn_Remove.addEventListener("click", function(event) {
+        //TODO implementation remove selected item from localStorage
+        //add code
+        //
+        ///
+        //
+    });
+
+   
     btn_like.addEventListener("click", function(event) {
         const btnValue = event.target.value;
         setUpFavoriteButttonStyle(btnValue);
@@ -43,6 +113,7 @@ window.addEventListener("load", function(){
         }else{
             removeFromFavorite();
         }
+        displayFavoritePokemon();
     });
 
     function setUpFavoriteButttonStyle(btnValue) {
@@ -55,6 +126,17 @@ window.addEventListener("load", function(){
             btn_like.value = "like";
             btn_like.innerText = "Add to Favotrtie"
         }
+    }
+
+    function isHavingFavorite() {
+        console.log("isHavingFavorite");
+        for (const key of Object.keys(localStorage)) {
+            console.log(key);
+            if(key.startsWith(prefixLocalStorage)){
+                return true;
+            }
+        }
+        return false;
     }
 
     function addToFavorite (){
@@ -93,7 +175,7 @@ window.addEventListener("load", function(){
             localStorage.removeItem(prefixLocalStorage + currentpokemonDetail.dexNumber);
         }
         //remove, then refresh favorite section
-        displayFavoritePokemon();
+        
     }
     
     function addSelectedPokemonClass(selectedPokemon) {
@@ -123,12 +205,20 @@ window.addEventListener("load", function(){
         for(let i = 0; i < allPokemonArray.length; i++) {
             const tRow = document.createElement("tr");
             const tCol = document.createElement("td");
-            tCol.setAttribute("id", `id-${allPokemonArray[i].dexNumber}`);
+            tCol.setAttribute("id", `${prefixId}${allPokemonArray[i].dexNumber}`);
             tCol.innerText = allPokemonArray[i].name;
             tRow.appendChild(tCol);
             allPokemons.appendChild(tRow);
             //add click event listener for each pokemon
-            tCol.addEventListener("click", displaySinglePokemonDetail);
+            tCol.addEventListener("click", function(event) {
+                //add selected pokemon css class
+                addSelectedPokemonClass(event.target);
+                //get dexNumber of selected pokemon
+                const dexNumber = event.target.id.slice(prefixId.length);
+                //console log dexNumber
+                console.log(dexNumber);
+                displaySinglePokemonDetail(dexNumber);
+            });
         }
 
     }
@@ -142,8 +232,18 @@ window.addEventListener("load", function(){
             const jsonObj = JSON.parse(localStorage.getItem(key));
             console.log(jsonObj);
             const image = createImageElement(key, jsonObj.imageUrl, key);
+            image.addEventListener("click" , function(event) {
+                document.querySelectorAll("#favorite-nav img").forEach( item =>
+                    item.classList.remove("favorite-clicked")
+                );
+                event.target.classList.add("favorite-clicked");
+                disableClickedFavoriteButton();
+            });
             addImagetoFavorites(image);
         });
+        
+        disableRemoveAllButton();
+        disableClickedFavoriteButton();
     }
 
     async function initialisePage() {
@@ -161,15 +261,9 @@ window.addEventListener("load", function(){
         
     }
 
-    async function displaySinglePokemonDetail(event) {
-        //add selected pokemon css class
-        addSelectedPokemonClass(event.target);
-        //get dexNumber of selected pokemon
-        const pokedex = event.target.id.slice(3);
-        //console log dexNumber
-        console.log(pokedex);
+    async function displaySinglePokemonDetail(dexNumber) {
         //fetch selected pokemon detail from endpoint:https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/:dexNumber
-        let singlePokemonresponseObj = await fetch(`https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/${pokedex}`);
+        let singlePokemonresponseObj = await fetch(`https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/${dexNumber}`);
         //check response status
         if (singlePokemonresponseObj.status === 404) {
             alert("Not Found - the ID we were searching for doesn'texist");

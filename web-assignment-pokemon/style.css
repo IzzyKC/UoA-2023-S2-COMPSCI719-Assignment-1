@@ -279,30 +279,24 @@ h1, h2, h3, h4 {
 #btn-like {
     float: right;
     text-align: center;
-    font-size: 18;
-    font-weight: 2em;
-    width: 150px;
-    height: 30px;
+    font-size: 1em;
+    font-weight: bolder;
+    width: 180px;
+    height: 35px;
     border-radius: 10px;
-    color: red;
+    color: lightgray;
     border: 3px 3px 3px rgb(171, 190, 62);
-    background-color: rgb(235, 233, 124);
+    background-color: rgb(119, 26, 69);
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    /*
-    position: relative;
-    */
+    padding: auto;
+    width: fit-content;
 }
 
-/*
-#img-like {
-    float: left;
-    position: absolute;
-    bottom: -18px;
-    left: 0;
-    width: 20px;
-    height: 20px;
+#remove-all:disabled, #show-detail:disabled, #remove:disabled {
+    background-color: darkgray;
 }
-*/
+
+
 
 .favorite-img {
     width: 50px;
@@ -311,4 +305,33 @@ h1, h2, h3, h4 {
     margin: 3px;
     
 }
+
+.favorite-clicked {
+    border: 3px solid darkgray;
+}
+
+#manual-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+#manual-nav * {
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14;
+    font-weight: bolder;
+    color: lightgray;
+    background-color: rgb(189, 117, 159);
+    padding: auto;
+    margin: 5px;
+    text-shadow: -1px 0 rgb(13, 6, 19), 0 1px rgb(13, 6, 19), 1px 0 rgb(13, 6, 19), 0 -1px rgb(13, 6, 19);
+    border: 2px 2px 2px black;
+    width: fit-content;
+    width: 100%;
+}
+
+
 
