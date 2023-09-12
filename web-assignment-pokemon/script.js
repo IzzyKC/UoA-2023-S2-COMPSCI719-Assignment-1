@@ -19,7 +19,7 @@ window.addEventListener("load", function(){
     //constant of localstorage prefix
     const prefixLocalStorage = "favoritePokemonID-"
     /** 
-     * retrive html element
+     * retrive common use html element
      */
     //add/Remove favorite button
     const btn_like = document.querySelector("#btn-like");
@@ -44,33 +44,32 @@ window.addEventListener("load", function(){
     
     function disableRemoveAllButton() {
         const flag = isHavingFavorite();
+        btn_RemoveAll.disabled = !flag;
+        /*
         if(flag) {
             btn_RemoveAll.disabled = false;
         }else{
             btn_RemoveAll.disabled = true;
         }
+        */
     }
     
     function disableClickedFavoriteButton() {
         let flag = isClickedFavorite();
         btn_ShowDetails.disabled = !flag;
         btn_Remove.disabled = !flag;
-        /*
-        const clickedFavorite = document.querySelector(".favorite-clicked");
-        if(clickedFavorite == null ){
-            btn_ShowDetails.disabled = true;
-        }else {
-            btn_ShowDetails.disabled = false;
-        }*/
     }
 
     function isClickedFavorite() {
         const clickedFavorite = document.querySelector(".favorite-clicked");
+        return (clickedFavorite == null ) ? false : true;
+        /*
         if(clickedFavorite == null ){
             return false;
         }else {
             return true;
         }
+        */
     }
     
     btn_RemoveAll.addEventListener("click", function() {
@@ -79,30 +78,44 @@ window.addEventListener("load", function(){
                 localStorage.removeItem(key);
             }
         });
+        //refresh favorite section
         displayFavoritePokemon();
+        //no favorite items, change btn_like to "Add to Favorite"
         setUpFavoriteButttonStyle("dislike");
     });
 
     btn_ShowDetails.addEventListener("click", function(event) {
-        const selectedId = document.querySelector(".favorite-clicked").id;
-        console.log(selectedId);
-        //get dexNumber of selected pokemon
+        const selectedId = getClickedFavoriteID();
         const dexNumber = selectedId.slice(prefixLocalStorage.length);
         //add selected pokemon css class
         const selectedFavorite = document.querySelector(`#${prefixId}${dexNumber}`);
         addSelectedPokemonClass(selectedFavorite);
         //console log dexNumber
         console.log(dexNumber);
+        //refres details section
         displaySinglePokemonDetail(dexNumber);
+        //TODO btn like text not correct
     });
 
     btn_Remove.addEventListener("click", function(event) {
-        //TODO implementation remove selected item from localStorage
-        //add code
-        //
-        ///
-        //
+        //remove selected item from localStorage
+        const selectedId = getClickedFavoriteID();
+        console.log(selectedId);
+        removeSingleFavorite(selectedId);
+        //refresh favorite section
+        displayFavoritePokemon();
+        //if selected item is on Main content, then change like button to "Add to Favorite"
+        console.log("currentpokemonDetail.dexNumber: " + currentpokemonDetail.dexNumber);
+        console.log("selectedId.slice(prefixLocalStorage.length): " + selectedId.slice(prefixLocalStorage.length));
+        if(currentpokemonDetail.dexNumber == selectedId.slice(prefixLocalStorage.length)){
+            console.log("btn_like.value: " + btn_like.value )
+            setUpFavoriteButttonStyle(btn_like.value);
+        }
     });
+
+    function getClickedFavoriteID() {
+        return document.querySelector(".favorite-clicked").id;
+    }
 
    
     btn_like.addEventListener("click", function(event) {
@@ -129,7 +142,8 @@ window.addEventListener("load", function(){
     }
 
     function isHavingFavorite() {
-        console.log("isHavingFavorite");
+        console.log("Favorites length: " + Object.keys(localStorage).length);
+        console.log("Favorites: " + Object.keys(localStorage));
         for (const key of Object.keys(localStorage)) {
             console.log(key);
             if(key.startsWith(prefixLocalStorage)){
@@ -145,7 +159,7 @@ window.addEventListener("load", function(){
         //2.https://blog.logrocket.com/localstorage-javascript-complete-guide/
 
         //check if selected pokemon exists
-        if(!isSelectedPokemonInFavorites(currentpokemonDetail)){
+        if(!isSelectedPokemonInFavorites(prefixLocalStorage + currentpokemonDetail.dexNumber)){
             //not exist, add to localstorage favorite list
             const key = prefixLocalStorage + currentpokemonDetail.dexNumber;
             //console.log(JSON.stringify(currentpokemonDetail));
@@ -160,9 +174,10 @@ window.addEventListener("load", function(){
         document.querySelector("#favorite-nav").appendChild(image);
     }
 
-    function isSelectedPokemonInFavorites(selectedPokemon) {
-        let favPokemons = localStorage.getItem(prefixLocalStorage + selectedPokemon.dexNumber);
-        if(favPokemons == null){
+    function isSelectedPokemonInFavorites(key) {
+        const selectedPokemon = localStorage.getItem(key);
+        console.log("selectedPokemon" + selectedPokemon);
+        if(selectedPokemon == null){
             return false;
         }else{
             return true;
@@ -170,12 +185,23 @@ window.addEventListener("load", function(){
     }
 
     function removeFromFavorite (){
+        const localStorgeyKey = prefixLocalStorage + currentpokemonDetail.dexNumber;
+        removeSingleFavorite(localStorgeyKey);
+        /*
         //selected pokemon is in favorite list, remove it
         if(isSelectedPokemonInFavorites(currentpokemonDetail)){
             localStorage.removeItem(prefixLocalStorage + currentpokemonDetail.dexNumber);
         }
-        //remove, then refresh favorite section
+        */
         
+    }
+
+    function removeSingleFavorite(key) {
+        //selected pokemon is in favorite list, remove it
+        if(isSelectedPokemonInFavorites(key)){
+            localStorage.removeItem(key);
+        }
+
     }
     
     function addSelectedPokemonClass(selectedPokemon) {
@@ -309,7 +335,9 @@ window.addEventListener("load", function(){
         displayPokemonTypeInfo();
 
         //set up button stype
-        setUpFavoriteButttonStyle(isSelectedPokemonInFavorites(currentpokemonDetail) ? "like" : "dislike");
+        console.log(currentpokemonDetail.dexNumber);
+        setUpFavoriteButttonStyle(isSelectedPokemonInFavorites(prefixLocalStorage 
+            + currentpokemonDetail.dexNumber) ? "like" : "dislike");
 
     }
 
