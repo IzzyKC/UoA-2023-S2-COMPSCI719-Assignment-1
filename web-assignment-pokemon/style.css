@@ -329,7 +329,7 @@ h1, h2, h3, h4 {
     border: 2px 2px 2px black;
     width: fit-content;
     width: 100%;
-    height: 20px;
+    height: fit-content;
 }
 
 

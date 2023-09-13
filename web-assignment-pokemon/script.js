@@ -79,7 +79,7 @@ window.addEventListener("load", function(){
         //console log dexNumber
         console.log(dexNumber);
         //refres details section
-        displaySinglePokemonDetail(dexNumber);
+        displayPokemonDetailById(dexNumber);
         //TODO btn like text not correct
     });
 
@@ -226,7 +226,7 @@ window.addEventListener("load", function(){
                 const dexNumber = event.target.id.slice(prefixId.length);
                 //console log dexNumber
                 console.log(dexNumber);
-                displaySinglePokemonDetail(dexNumber);
+                displayPokemonDetailById(dexNumber);
             });
         }
 
@@ -272,7 +272,7 @@ window.addEventListener("load", function(){
         
     }
 
-    async function displaySinglePokemonDetail(dexNumber) {
+    async function displayPokemonDetailById(dexNumber) {
         //fetch selected pokemon detail from endpoint:https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/:dexNumber
         let singlePokemonresponseObj = await fetch(`https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/${dexNumber}`);
         //check response status
