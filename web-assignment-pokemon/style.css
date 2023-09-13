@@ -327,7 +327,6 @@ h1, h2, h3, h4 {
     margin: 5px;
     text-shadow: -1px 0 rgb(13, 6, 19), 0 1px rgb(13, 6, 19), 1px 0 rgb(13, 6, 19), 0 -1px rgb(13, 6, 19);
     border: 2px 2px 2px black;
-    width: fit-content;
     width: 100%;
     height: fit-content;
 }
