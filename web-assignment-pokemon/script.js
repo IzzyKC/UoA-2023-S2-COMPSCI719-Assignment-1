@@ -347,7 +347,7 @@ window.addEventListener("load", function(){
             console.log("type: "+ type);
             updateOffenseInfoByType(type);
         }
-        //change to for loop to avoid the chaos of data retuning sequence
+        //change to for...of...loop to avoid the chaos of data retuning sequence
         //currentpokemonDetail.types.forEach(type => updateOffenseInfoByType(type));
 
     }
