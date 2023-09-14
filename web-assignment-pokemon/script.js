@@ -343,7 +343,12 @@ window.addEventListener("load", function(){
             return;
         }
         //update offense info by pokemon type
-        currentpokemonDetail.types.forEach(type => updateOffenseInfoByType(type));
+        for(const type of currentpokemonDetail.types) {
+            console.log("type: "+ type);
+            updateOffenseInfoByType(type);
+        }
+        //change to for loop to avoid the chaos of data retuning sequence
+        //currentpokemonDetail.types.forEach(type => updateOffenseInfoByType(type));
 
     }
 
