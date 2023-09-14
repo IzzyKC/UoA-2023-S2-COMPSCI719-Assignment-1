@@ -193,7 +193,7 @@ h1, h2, h3, h4 {
 
 #pokeimg:hover {
     transform: rotate(360deg) scale(1.5);
-    filter: contrast(150%) drop-shadow(16px 16px 10px rgb(19, 18, 18));
+    filter: contrast(150%) drop-shadow(16px 16px 10px rgb(243, 25, 25));
 }
 
 .pokeSelected {
