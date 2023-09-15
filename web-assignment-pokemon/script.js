@@ -178,7 +178,6 @@ window.addEventListener("load", function(){
         if(isSelectedPokemonInFavorites(key)){
             localStorage.removeItem(key);
         }
-
     }
     
     function addSelectedPokemonClass(selectedPokemon) {
