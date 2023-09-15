@@ -32,16 +32,16 @@ window.addEventListener("load", function(){
     
     //Test localStorage
     //this.localStorage.clear();
+    
+    //dispaly all pokemon on left sidebar
+    displayAllPokemon();
 
     //initilaise page
     initialisePage();
 
-     //dispaly all pokemon on left sidebar
-     displayAllPokemon();
+    //display all favotire pokemon images on Favorites section
+    displayFavoritePokemon();
 
-     //display all favotire pokemon images on Favorites section
-     displayFavoritePokemon();
-    
     function disableRemoveAllButton() {
         const flag = isHavingFavorite();
         btn_RemoveAll.disabled = !flag;
@@ -264,9 +264,12 @@ window.addEventListener("load", function(){
         //console random pokemon detail
         console.log(randomPokemonDetail);
         currentpokemonDetail = randomPokemonDetail;
+        
         //add selected pokemon css class
-        console.log(document.querySelector("#id-"+currentpokemonDetail.dexNumber));
-        addSelectedPokemonClass(document.querySelector("#id-"+currentpokemonDetail.dexNumber));
+        const selectedPokemon = document.querySelector("#" + prefixId + currentpokemonDetail.dexNumber);
+        console.log("id: "+ currentpokemonDetail.dexNumber+ selectedPokemon);
+        addSelectedPokemonClass(selectedPokemon);
+        
         //update details on main content and type info
         updatePokemondetail();
         
