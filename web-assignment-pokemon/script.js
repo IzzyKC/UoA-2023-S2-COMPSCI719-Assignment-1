@@ -32,15 +32,9 @@ window.addEventListener("load", function(){
     
     //Test localStorage
     //this.localStorage.clear();
-    
-    //dispaly all pokemon on left sidebar
-    displayAllPokemon();
 
     //initilaise page
     initialisePage();
-
-    //display all favotire pokemon images on Favorites section
-    displayFavoritePokemon();
 
     function disableRemoveAllButton() {
         const flag = isHavingFavorite();
@@ -65,7 +59,7 @@ window.addEventListener("load", function(){
             }
         });
         //refresh favorite section
-        displayFavoritePokemon();
+        updateFavorites();
         //no favorite items, change btn_like to "Add to Favorite"
         setUpFavoriteButttonStyle("dislike");
     });
@@ -89,7 +83,7 @@ window.addEventListener("load", function(){
         console.log(selectedId);
         removeSingleFavorite(selectedId);
         //refresh favorite section
-        displayFavoritePokemon();
+        updateFavorites();
         //if selected item is on Main content, then change like button to "Add to Favorite"
         console.log("currentpokemonDetail.dexNumber: " + currentpokemonDetail.dexNumber);
         console.log("selectedId.slice(prefixLocalStorage.length): " + selectedId.slice(prefixLocalStorage.length));
@@ -112,7 +106,7 @@ window.addEventListener("load", function(){
         }else{
             removeFromFavorite();
         }
-        displayFavoritePokemon();
+        updateFavorites();
     });
 
     function setUpFavoriteButttonStyle(btnValue) {
@@ -163,7 +157,7 @@ window.addEventListener("load", function(){
 
     function isSelectedPokemonInFavorites(key) {
         const selectedPokemon = localStorage.getItem(key);
-        console.log("selectedPokemon" + selectedPokemon);
+        console.log(`selectedPokemon in favorite: ${selectedPokemon}`);
         if(selectedPokemon == null){
             return false;
         }else{
@@ -200,15 +194,22 @@ window.addEventListener("load", function(){
         selectedPokemon.classList.add("pokeSelected");
     }
 
-    async function displayAllPokemon() {
-        //get all-pokemon container
-        const allPokemons = document.querySelector("#all-pokemon");
+    async function fetchAllPokemon() {
+        console.log("fetch all pokemons starts");
         //fetch all pokemon information from endpoint:trex-sandwich.com
-        let allPokemonResponseObj = await fetch(" https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon");
+        const allPokemonResponseObj = await fetch(" https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon");
         //Use the fetch API response.json() method to get a JSON object from the response
-        let allPokemonArray = await allPokemonResponseObj.json();
+        const allPokemonArray = await allPokemonResponseObj.json();
         //console allPokemon information
         console.log(allPokemonArray);
+        console.log("fetch all pokemons ends")
+        return allPokemonArray;
+    }
+
+    function displayAllPokemon(allPokemonArray) {
+        console.log("display all pokemons starts")
+        //get all-pokemon container
+        const allPokemons = document.querySelector("#all-pokemon");
         //loop to display all pokemons on the left sidebar
         totalPokemonCount = allPokemonArray.length;
         for(let i = 0; i < allPokemonArray.length; i++) {
@@ -229,10 +230,11 @@ window.addEventListener("load", function(){
                 displayPokemonDetailById(dexNumber);
             });
         }
-
+        console.log("display all pokemons ends")
     }
 
-    function displayFavoritePokemon(){
+    function updateFavorites(){
+        console.log("update favorite section starts");
         const favoriteNav = document.querySelector("#favorite-nav");
         favoriteNav.innerHTML = "" ;
         Object.keys(localStorage).forEach(key => {
@@ -254,25 +256,45 @@ window.addEventListener("load", function(){
         //buttons on favorite section: enable/disable control
         disableRemoveAllButton();
         disableClickedFavoriteButton();
+
+        console.log("update favorite section ends");
+    }
+
+    async function fetchRandomPokemon() {
+        console.log("fetch random pokemon starts");
+        //first load/refresh:a random Pokemon should be loaded as the selected Pokemon
+        const randomPokemonResponseObj = await fetch("https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/random");
+        //Use the fetch API response.json() method to get a JSON object from the response
+        const randomPokemonDetail = await randomPokemonResponseObj.json();
+        console.log(randomPokemonDetail);
+        console.log("fetch random pokemon ends");
+        return randomPokemonDetail;
+
     }
 
     async function initialisePage() {
-        //first load/refresh:a random Pokemon should be loaded as the selected Pokemon
-        let randomPokemonResponseObj = await fetch("https://cs719-a01-pt-server.trex-sandwich.com/api/pokemon/random");
-        //Use the fetch API response.json() method to get a JSON object from the response
-        let randomPokemonDetail = await randomPokemonResponseObj.json();
-        //console random pokemon detail
-        console.log(randomPokemonDetail);
+        console.log("initialise page starts");
+        //fetch all pokemons
+        const allPokemonArray = await fetchAllPokemon();
+        //fetch random pokemon
+        const randomPokemonDetail = await fetchRandomPokemon();
         currentpokemonDetail = randomPokemonDetail;
+
+        //display all pokemons on left sidebar
+        displayAllPokemon(allPokemonArray);
         
         //add selected pokemon css class
-        const selectedPokemon = document.querySelector("#" + prefixId + currentpokemonDetail.dexNumber);
-        console.log("id: "+ currentpokemonDetail.dexNumber+ selectedPokemon);
+        const selectedPokemon = document.querySelector(`#${prefixId}${currentpokemonDetail.dexNumber}`);
+        console.log(`id-${currentpokemonDetail.dexNumber}: ${selectedPokemon}`);
         addSelectedPokemonClass(selectedPokemon);
         
         //update details on main content and type info
         updatePokemondetail();
-        
+
+        //display all favotire pokemon images on Favorites section
+        updateFavorites();
+
+        console.log("initialise page ends");
     }
 
     async function displayPokemonDetailById(dexNumber) {
@@ -303,6 +325,7 @@ window.addEventListener("load", function(){
     }
   
     function updatePokemondetail() {
+        console.log("update pokemon detail");
         //display name
         document.querySelector("#name").innerText = currentpokemonDetail.name;
 
@@ -320,7 +343,7 @@ window.addEventListener("load", function(){
         document.querySelector("#description").innerText = currentpokemonDetail.dexEntry;
 
         //displayTypeInfo
-        displayPokemonTypeInfo();
+        updatePokemonTypeInfo();
 
         //set up button stype
         console.log(currentpokemonDetail.dexNumber);
@@ -329,7 +352,7 @@ window.addEventListener("load", function(){
 
     }
 
-    function displayPokemonTypeInfo() {
+    function updatePokemonTypeInfo() {
         //update pokemon name
         document.querySelector("#selectedokemon").innerText = currentpokemonDetail.name;
         //update pokemon types
