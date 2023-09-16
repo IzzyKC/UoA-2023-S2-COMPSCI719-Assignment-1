@@ -36,6 +36,9 @@ window.addEventListener("load", function(){
     //initilaise page
     initialisePage();
 
+    //set Continuous timer to update favorite
+    //const updateFavoritesTimer = setInterval(updateFavorites, 5000);
+
     function disableRemoveAllButton() {
         const flag = isHavingFavorite();
         btn_RemoveAll.disabled = !flag;
@@ -236,6 +239,7 @@ window.addEventListener("load", function(){
         console.log("update favorite section starts");
         const favoriteNav = document.querySelector("#favorite-nav");
         favoriteNav.innerHTML = "" ;
+        console.log(`localStorge Keys length: ${Object.keys(localStorage).length}`);
         Object.keys(localStorage).forEach(key => {
             console.log(`${key} - ${localStorage.getItem(key)}`);
             //const div = document.querySelector("div");
@@ -289,7 +293,6 @@ window.addEventListener("load", function(){
         
         //update details on main content and type info
         updatePokemondetail();
-
         //display all favotire pokemon images on Favorites section
         updateFavorites();
 
