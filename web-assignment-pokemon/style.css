@@ -293,24 +293,18 @@ h1, h2, h3, h4 {
     width: fit-content;
 }
 
-/*
-#test {
-    filter: grayscale(1);
-}
-
-#btn-favorite {
+#btn-heart {
+    float: right;
     text-align: center;
-    width: 50px;
-    height: 50px;
+    border: 0;
+    background: transparent;
+    width: 80px;
+    height: 80px;
 }
 
-#btn-favorite img {
-    width: 30px;
-    height: 30px;
-    padding: auto;
-    margin: auto;
+.btn-heartplus {
+    filter: grayscale(0.8);
 }
-*/
 
 #remove-all:disabled, #show-detail:disabled, #remove:disabled {
     background-color: darkgray;

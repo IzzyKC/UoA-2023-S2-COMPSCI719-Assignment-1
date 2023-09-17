@@ -22,7 +22,7 @@ window.addEventListener("load", function(){
      * retrive common use html element
      */
     //add/Remove favorite button
-    const btn_like = document.querySelector("#btn-like");
+    const btn_heart = document.querySelector("#btn-heart");
     //remove all favorite btn
     const btn_RemoveAll = document.querySelector("#remove-all");
     //show selected favorite details button
@@ -35,9 +35,6 @@ window.addEventListener("load", function(){
 
     //initilaise page
     initialisePage();
-
-    //set Continuous timer to update favorite
-    //const updateFavoritesTimer = setInterval(updateFavorites, 5000);
 
     function disableRemoveAllButton() {
         const flag = isHavingFavorite();
@@ -58,13 +55,13 @@ window.addEventListener("load", function(){
     btn_RemoveAll.addEventListener("click", function() {
         Object.keys(localStorage).forEach(function(key) {
             if(key.startsWith(prefixLocalStorage)){
-                localStorage.removeItem(key);
+                removeSingleFavorite(key);
             }
         });
-        //refresh favorite section
-        updateFavorites();
-        //no favorite items, change btn_like to "Add to Favorite"
-        setUpFavoriteButttonStyle("dislike");
+        //refresh favorite buttons
+        updateFavoritesButtons();
+        //no favorite items, change btn_heart value to "heart"
+        updateHeartButttonStyle("heartplus");
     });
 
     btn_ShowDetails.addEventListener("click", function(event) {
@@ -77,7 +74,6 @@ window.addEventListener("load", function(){
         console.log(dexNumber);
         //refres details section
         displayPokemonDetailById(dexNumber);
-        //TODO btn like text not correct
     });
 
     btn_Remove.addEventListener("click", function(event) {
@@ -85,14 +81,14 @@ window.addEventListener("load", function(){
         const selectedId = getClickedFavoriteID();
         console.log(selectedId);
         removeSingleFavorite(selectedId);
-        //refresh favorite section
-        updateFavorites();
+        //refresh favorite buttons
+        updateFavoritesButtons();
         //if selected item is on Main content, then change like button to "Add to Favorite"
         console.log("currentpokemonDetail.dexNumber: " + currentpokemonDetail.dexNumber);
         console.log("selectedId.slice(prefixLocalStorage.length): " + selectedId.slice(prefixLocalStorage.length));
         if(currentpokemonDetail.dexNumber == selectedId.slice(prefixLocalStorage.length)){
-            console.log("btn_like.value: " + btn_like.value )
-            setUpFavoriteButttonStyle(btn_like.value);
+            console.log("btn_heart.value: " + btn_heart.value )
+            updateHeartButttonStyle(btn_heart.value);
         }
     });
 
@@ -100,27 +96,27 @@ window.addEventListener("load", function(){
         return document.querySelector(".favorite-clicked").id;
     }
 
-   
-    btn_like.addEventListener("click", function(event) {
+    btn_heart.addEventListener("click", function(event) {
         const btnValue = event.target.value;
-        setUpFavoriteButttonStyle(btnValue);
-        if(btnValue === "like"){
+        console.log(`value: ${btnValue}`);
+        updateHeartButttonStyle(btnValue);
+        if(btnValue === "heart"){
             addToFavorite();
         }else{
             removeFromFavorite();
         }
-        updateFavorites();
+        updateFavoritesButtons();
     });
 
-    function setUpFavoriteButttonStyle(btnValue) {
-        //if current value is like, then enable dislike 
-        //otherwise, enable like
-        if(btnValue === "like"){
-            btn_like.value = "dislike";
-            btn_like.innerText = "Remove from Favorite"
+    function updateHeartButttonStyle(btnValue) {
+        //if current value is heart, then add class btn-heartplus
+        //otherwise, remove class btn-heartplus
+        if(btnValue === "heart"){
+            btn_heart.value = "heartplus";
+            btn_heart.classList.add("btn-heartplus");
         }else{
-            btn_like.value = "like";
-            btn_like.innerText = "Add to Favotrtie"
+            btn_heart.value = "heart";
+            btn_heart.classList.remove("btn-heartplus");
         }
     }
 
@@ -153,6 +149,14 @@ window.addEventListener("load", function(){
     }
 
     function addImagetoFavorites(image) {
+        //add favorite image click event listener
+        image.addEventListener("click" , function(event) {
+            document.querySelectorAll("#favorite-nav img").forEach( item =>
+                item.classList.remove("favorite-clicked")
+            );
+            event.target.classList.add("favorite-clicked");
+            disableClickedFavoriteButton();
+        });
         //add image css class
         image.classList.add("favorite-img");
         document.querySelector("#favorite-nav").appendChild(image);
@@ -180,6 +184,7 @@ window.addEventListener("load", function(){
         //selected pokemon is in favorite list, remove it
         if(isSelectedPokemonInFavorites(key)){
             localStorage.removeItem(key);
+            document.querySelector(`#${key}`).remove();
         }
     }
     
@@ -235,8 +240,8 @@ window.addEventListener("load", function(){
         console.log("display all pokemons ends")
     }
 
-    function updateFavorites(){
-        console.log("update favorite section starts");
+    function displayFavorites(){
+        console.log("display favorite section starts");
         const favoriteNav = document.querySelector("#favorite-nav");
         favoriteNav.innerHTML = "" ;
         console.log(`localStorge Keys length: ${Object.keys(localStorage).length}`);
@@ -246,21 +251,19 @@ window.addEventListener("load", function(){
             const jsonObj = JSON.parse(localStorage.getItem(key));
             console.log(jsonObj);
             const image = createImageElement(key, jsonObj.imageUrl, key);
-            image.addEventListener("click" , function(event) {
-                document.querySelectorAll("#favorite-nav img").forEach( item =>
-                    item.classList.remove("favorite-clicked")
-                );
-                event.target.classList.add("favorite-clicked");
-                disableClickedFavoriteButton();
-            });
             addImagetoFavorites(image);
         });
         
         //buttons on favorite section: enable/disable control
+        updateFavoritesButtons()
+
+        console.log("display favorite section ends");
+    }
+
+    function updateFavoritesButtons() {
+        //buttons on favorite section: enable/disable control
         disableRemoveAllButton();
         disableClickedFavoriteButton();
-
-        console.log("update favorite section ends");
     }
 
     async function fetchRandomPokemon() {
@@ -293,8 +296,9 @@ window.addEventListener("load", function(){
         
         //update details on main content and type info
         updatePokemondetail();
+
         //display all favotire pokemon images on Favorites section
-        updateFavorites();
+        displayFavorites();
 
         console.log("initialise page ends");
     }
@@ -327,7 +331,7 @@ window.addEventListener("load", function(){
     }
   
     function updatePokemondetail() {
-        console.log("update pokemon detail");
+        console.log("update pokemon detail starts");
         //display name
         document.querySelector("#name").innerText = currentpokemonDetail.name;
 
@@ -349,8 +353,12 @@ window.addEventListener("load", function(){
 
         //set up button stype
         console.log(currentpokemonDetail.dexNumber);
-        setUpFavoriteButttonStyle(isSelectedPokemonInFavorites(prefixLocalStorage 
-            + currentpokemonDetail.dexNumber) ? "like" : "dislike");
+        console.log("isSelectedPokemonInFavorites" + isSelectedPokemonInFavorites(prefixLocalStorage 
+            + currentpokemonDetail.dexNumber) ? "heart" : "heartplus");
+        updateHeartButttonStyle(isSelectedPokemonInFavorites(prefixLocalStorage 
+            + currentpokemonDetail.dexNumber) ? "heart" : "heartplus");
+
+        console.log("update pokemon detail ends");
 
     }
 
