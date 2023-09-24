@@ -277,22 +277,6 @@ h1, h2, h3, h4 {
     padding-top: 0;
 }
 
-#btn-like {
-    float: right;
-    text-align: center;
-    font-size: 1em;
-    font-weight: bolder;
-    width: 180px;
-    height: 35px;
-    border-radius: 10px;
-    color: lightgray;
-    border: 3px 3px 3px rgb(171, 190, 62);
-    background-color: rgb(119, 26, 69);
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    padding: auto;
-    width: fit-content;
-}
-
 #btn-heart {
     float: right;
     text-align: center;

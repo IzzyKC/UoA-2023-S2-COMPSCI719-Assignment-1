@@ -83,7 +83,7 @@ window.addEventListener("load", function(){
         removeSingleFavorite(selectedId);
         //refresh favorite buttons
         updateFavoritesButtons();
-        //if selected item is on Main content, then change like button to "Add to Favorite"
+        //if selected item is on Main content, then change heart button
         console.log("currentpokemonDetail.dexNumber: " + currentpokemonDetail.dexNumber);
         console.log("selectedId.slice(prefixLocalStorage.length): " + selectedId.slice(prefixLocalStorage.length));
         if(currentpokemonDetail.dexNumber == selectedId.slice(prefixLocalStorage.length)){
@@ -173,7 +173,7 @@ window.addEventListener("load", function(){
     }
 
     function removeFromFavorite (){
-        //btn-like triggered function
+        //btn-heart triggered function
         const localStorgeyKey = prefixLocalStorage + currentpokemonDetail.dexNumber;
         //remove single item from localStorage by key
         removeSingleFavorite(localStorgeyKey);
