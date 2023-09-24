@@ -222,7 +222,7 @@ h1, h2, h3, h4 {
 }
 
 #flippokemon, #movepokemon {
-    animation: rotation 500ms 1 linear;
+    animation: popup 500ms 1 linear;
 }
 
 #flippokemon:hover {
@@ -234,7 +234,7 @@ h1, h2, h3, h4 {
 }
 
 
-@keyframes rotation {
+@keyframes popup {
     from {
         opacity: 0; transform: scale(0); 
     }
